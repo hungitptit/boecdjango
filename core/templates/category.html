@@ -1,0 +1,118 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Categories {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7">
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0">Categories</h3>
+                </div>
+                <div class="card-body">
+                        <!-- Category Card -->
+                        <div id="myTabContent" class="tab-content">
+                            <section class="services">
+                                <div id="topic" class="container">
+                    
+                                    
+                    
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up">
+                                            <div class="icon-box icon-box-pink">
+                                                <!--div class="icon"><i class="bx bxl-dribbble"></i></div-->
+                                                <img style = "height: 300px ;width: 400px " src="https://cdn.vietnambiz.vn/171464876016439296/2020/6/4/eventtechnology-15912456396331111417122.jpg" alt=""  class="img-thumbnail"></a>
+                                                <h1 class="title">
+                                                    <a href="/product/Technology/"><br>Technology</a>
+                                                </h4>
+                                                <p class="description">Product for developer, engineer</p>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="col-md-6 col-lg-4 d-flex align-items-stretch" data-aos="fade-up" data-aos-delay="100">
+                                            <div class="icon-box icon-box-cyan">
+                                                <!--div class="icon"><i class="bx bx-file"></i></div-->
+                                                <img style = "height: 300px ;width: 400px " src="https://ieltsngocbach.com/uploads/essay_vocabulary/avatar/91/Education-Budget-2019.jpg" alt=""  class="img-thumbnail"></a>
+                                                <h1 class="title">
+                                                    <a href="/product/Education/"><br>Education</a>
+                                                </h4>
+                                                <p class="description">Products for teacher and student</p>
+                                                
+                                            </div>
+                                        </div>
+                    
+                    
+                                    </div>
+                                </div>
+                            </section>
+                            <div role="tabpanel" class="tab-pane fade in active" id="expeditions" aria-labelledby="expeditions-tab">
+                                {% for item in items %}
+                                
+                                {% if forloop.first   %}
+                                <div class="agile_top_brands_grids">
+                                {% endif %}
+    
+                                    <div class="col-md-4 top_brand_left">
+                                        <div class="hover14 column">
+                                            <div class="agile_top_brand_left_grid">
+                                                <div class="agile_top_brand_left_grid_pos">
+                                                    <img src="#" alt=" " />
+                                                </div>
+                                                <div class="agile_top_brand_left_grid1">
+                                                    <figure>
+                                                        <div class="snipcart-item block" >
+                                                            <div class="snipcart-thumb">
+                                                                <a  href="products.html"><img style="height: 200px" title=" " alt=" " src="https://i.imgur.com/9UYzfny.png" /></a>		
+                                                                <p>{{ item.name }}</p>
+                                                               
+                                                              
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    
+                                {% if forloop.counter|divisibleby:"3" and not forloop.counter.last  %}
+                                <div class="clearfix"> </div>
+                                </div>	
+                                <div class="agile_top_brands_grids">
+                                {% endif %}	
+                                    
+                                {% endfor %}
+                                <div class="clearfix"> </div>
+                                </div>	
+                            </div>
+    
+                            
+                        </div>
+                        <!-- //Product Card -->
+                    </div>
+                </div>
+            </div>
+
+            {% include "includes/footer.html" %}
+
+        </div>
+
+        {% endblock content %}
+
+        <!-- Specific JS goes HERE -->
+        {% block javascripts %}{% endblock javascripts %}

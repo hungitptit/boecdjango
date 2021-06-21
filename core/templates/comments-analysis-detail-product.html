@@ -1,0 +1,97 @@
+{% extends 'layouts/base-staff.html' %}
+{% load static  
+{% block title %} Icons {% endblock title %}
+{% load i18n %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7">
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="d-flex justify-content-between">
+                        <h3 class="mb-0" id="product-name-title">{{ prices.0.productid.name }}</h3>
+                        <h3 id="product-type">{{ prices.0.productid.brandid.name }}</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6 item-photo">
+                            <img src="{{item.image}}" class="img-thumbnail" alt="">
+                        </div>
+                        <div class="col-lg-6">
+                            <h1 id="product-name">{{ item.name }}</h1>
+                            <h5 class="text-primary">Supllier: <a href="#" class="text-success" id="supplier-name">{{ suppliers.0.name }}</a></h5>
+
+                        
+                        </div>
+                    </div>
+                    <div class="row">
+                     
+                    <p class="padding-top" style="padding:15px;"></p>
+                        <h4>Comments</h4>
+                    </div>
+                    <div class="row">
+                        
+                        
+                        <div class="col-md-12">
+                            <div class="product-reviews">
+                                {% for rs in comments %}
+                                    <div class="single-review">
+                                        <div class="review-heading">
+                                            <div><a href="#"><i class="fa fa-star"></i> {{ rs.authuser.username}}</a> </div>
+                                            <div><b>{{ rs.subject }}</b> </div>
+                                            <div><a href="#"><i class="fa fa-clock-o"></i> {{ rs.create_at}}</a></div>
+
+                                            <div class="review-rating pull-right">
+                                                <i class="fa fa-star{% if rs.rate < 1 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 2 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 3 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 4 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 5 %}-o empty{% endif %}"></i>
+                                            </div>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>{{ rs.detail }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <ul class="reviews-pages">
+                                    <li class="active">1</li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    </div>
+                   
+            
+                    
+                </div>
+            </div>
+
+            {% include "includes/footer.html" %}
+
+        </div>
+
+        {% endblock content %}
+
+        <!-- Specific JS goes HERE -->
+        {% block javascripts %}{% endblock javascripts %}
+    </div>
+</div>

@@ -1,0 +1,183 @@
+{% extends 'layouts/base.html' %}
+{% load static  
+{% block title %} Icons {% endblock title %}
+{% load i18n %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7">
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="d-flex justify-content-between">
+                        <h3 class="mb-0" id="product-name-title">{{ prices.0.productid.name }}</h3>
+                        <h3 id="product-type">{{ prices.0.productid.brandid.name }}</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-6 item-photo">
+                            <img src="{{item.image}}" class="img-thumbnail" alt="">
+                        </div>
+                        <div class="col-lg-6">
+                            <h1 id="product-name">{{ item.name }}</h1>
+                            <h5 class="text-primary">Supllier: <a href="#" class="text-success" id="supplier-name">{{ suppliers.0.name }}</a></h5>
+
+                            <!-- Price -->
+                            <h2 id="product-price">{{ prices.0.price }}$</h2>
+
+                            <div class="section" style="padding-bottom:20px;">
+                                <h6 class="title-attr">Quantity</h6>
+                                <div>
+                                    <div
+                                        class="def-number-input number-input safari_only mb-0 w-100">
+                                        <button
+                                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();
+                                            window.location.href='#'"
+                                            class="btn btn-primary btn-sm"><i
+                                                class="ni ni-fat-delete"></i></button>
+                                        <input class="quantity" min="1" name="quantity"
+                                            value="1" type="number">
+                                        <button
+                                            onclick="this.parentNode.querySelector('input[type=number]').stepUp();
+                                            window.location.href='#'"
+                                            class="btn btn-primary btn-sm"><i
+                                                class="ni ni-fat-add"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="section" style="padding-bottom:20px;">
+                                <a class="btn btn-primary btn-md text-white" href="/">
+                                    <i class="ni ni-spaceship"></i>
+                                    <span class="mr-2" aria-hidden="true">
+                                        Buy now
+                                    </span>
+                                </a>
+                               
+                                <a class="btn btn-success btn-md text-white" href="{% url 'cart_add' id=item.id %}">
+                                    <i class="ni ni-basket"></i>
+                                    <span class="mr-2" aria-hidden="true">
+                                        Add to cart
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="padding-top" style="padding:15px;"></p>
+                            <h4>Description</h4>
+                            <!-- Description -->
+
+                                                
+                                                    <p id="product-description">
+                                                        <!-- Item description go here -->
+                                                        {{ prices.0.productid.description |safe}}
+                                                    </p>
+                                                </p>
+    
+                        </div>
+                    </div>
+                    <p class="padding-top" style="padding:15px;"></p>
+                        <h4>Comments</h4>
+                    <div class="row">
+                        
+                        
+                        <div class="col-md-6">
+                            <div class="product-reviews">
+                                {% for rs in comments %}
+                                    <div class="single-review">
+                                        <div class="review-heading">
+                                            <div><a href="#"><i class="fa fa-star"></i> {{ rs.authuser.username}}</a> </div>
+                                            <div><b>{{ rs.subject }}</b> </div>
+                                            <div><a href="#"><i class="fa fa-clock-o"></i> {{ rs.create_at}}</a></div>
+
+                                            <div class="review-rating pull-right">
+                                                <i class="fa fa-star{% if rs.rate < 1 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 2 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 3 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 4 %}-o empty{% endif %}"></i>
+                                                <i class="fa fa-star{% if rs.rate < 5 %}-o empty{% endif %}"></i>
+                                            </div>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>{{ rs.detail }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <ul class="reviews-pages">
+                                    <li class="active">1</li>
+                                    <li><a href="#">2</a></li>
+                                    <li><a href="#">3</a></li>
+                                    <li><a href="#"><i class="fa fa-caret-right"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="text-uppercase">Write Your Review</h4>
+                            
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert alert-{{message.tags}}" role="alert">
+                                        {{ message }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <form class="review-form" action="/product/addcomment/{{prices.0.productid.id }}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <input name="subject" class="input" type="text" placeholder="Your subject" />
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="detail" class="input" placeholder="What do you think about this product ?"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-rating">
+                                        <strong class="text-uppercase">Your Rating: </strong>
+                                        <div class="stars">
+                                            <input type="radio" id="star5" name="rate" value="5" /><label for="star5"></label>
+                                            <input type="radio" id="star4" name="rate" value="4" /><label for="star4"></label>
+                                            <input type="radio" id="star3" name="rate" value="3" /><label for="star3"></label>
+                                            <input type="radio" id="star2" name="rate" value="2" /><label for="star2"></label>
+                                            <input type="radio" id="star1" name="rate" value="1" /><label for="star1"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if user.id is not None %}
+                                    <button class="btn btn-primary btn-md text-white">Submit</button>
+                                {% else %}
+                                    You must be logged in to post a review
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                   
+            
+                    
+                </div>
+            </div>
+
+            {% include "includes/footer.html" %}
+
+        </div>
+
+        {% endblock content %}
+
+        <!-- Specific JS goes HERE -->
+        {% block javascripts %}{% endblock javascripts %}
+    </div>
+</div>

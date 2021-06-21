@@ -1,0 +1,118 @@
+{% extends 'layouts/base-staff.html' %}
+
+{% block title %} Hot and New {% endblock title %}
+{% load mathfilters %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      font-size: 30px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #79a6eb;
+    }
+    </style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
+        <div class="header-body">
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--7">
+
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0">Comments Analysis</h3>
+                </div>
+                <div class="card-body">
+                   
+                        <form method="post" action="/staff/comments-analysis/">
+                            {% csrf_token %}
+                            <div class="row">
+    
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <select name="object" id="product-type-filter" class="form-control form-control-alternative">
+                                            {% ifequal object 'Product' %}
+                                            <option selected="selected" value="Product">Product</option>
+                                            <option value="User">User</option>
+                                            
+                                            {% else %}
+                                            <option value="Product">Product</option>
+                                            <option selected="selected" value="User">User</option>
+                                            {% endifequal %}
+                                        </select>
+                                    </div>
+                                </div>
+                               
+                                <div class="col-md-2">
+                                    <input type="submit" value="Filter" class="btn btn-md btn-primary"></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="panel-body">
+                                        {% ifequal object 'Product' %}
+                                        
+                                        <table style="background-color:rgb(100, 92, 221)" class="table table-bordered" name = "kqPerson" >
+                                            <tr style="color: seashell;"><th style="font-size: 18px;">ID</th>
+                                            <th style="font-size: 18px;">Product Name </th>                       
+                                            <th style="font-size: 18px;">Positive</th>
+                                            <th style="font-size: 18px;">Negative</th>
+                                            <th style="font-size: 18px;">Satisfy</th>
+                                            
+                                            </tr>
+                                            {% for item in data	%}
+                                            <tr style="color: seashell;">
+                                            <td style="font-size: 18px;" >{{item.product.id}}</td>
+                                            
+                                            <td style="font-size: 18px;"><a href="./detail/{{item.product.id}}/"><div style="color: seashell;">{{item.product.name}}</div></a></td>
+                                            
+                                            <td style="font-size: 18px;">{{item.positive}}</td>
+                                            <td style="font-size: 18px;">{{item.negative}}</td>
+                                            {% if item.satisfy >= 80 %}
+                                            <td style="color:rgb(0, 255, 0);font-size: 18px;"><b>{{item.satisfy|floatformat:1}} %</b></td>
+                                            {% elif item.satisfy < 80 and item.satisfy >= 30 %}
+                                            <td style="color:yellow; font-size: 18px;"><b>{{item.satisfy|floatformat:1}} %</b></td>
+                                            {% else %}
+                                            <td style="color:red; font-size: 18px;"><b>{{item.satisfy|floatformat:1}} %</b></td>
+                                            {% endif %}
+                                            </tr>
+                                            {% endfor %}		
+                                        </table>
+                                        {% else %}
+                                        {% endifequal %}
+                                </div>
+                            </div>
+                        </form>
+                        
+ 
+                </div>
+            </div>
+
+            {% include "includes/footer.html" %}
+
+        </div>
+
+        {% endblock content %}
+
+        <!-- Specific JS goes HERE -->
+        {% block javascripts %}{% endblock javascripts %}
