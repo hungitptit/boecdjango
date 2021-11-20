@@ -1,5 +1,5 @@
 {% extends 'layouts/base-staff.html' %}
-{% load static  
+{% load static %}  
 {% block title %} Icons {% endblock title %}
 {% load i18n %}
 
@@ -7,7 +7,39 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+<script>
+    window.onload = function () {
+        CanvasJS.addColorSet("custom1",
+                [//colorSet Array
 
+                "#009900",
+                "#FF0000",
+                                
+                ]);
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        colorSet: "custom1",
+        title:{
+            text: "",
+            horizontalAlign: "left"
+        },
+        data: [{
+            type: "doughnut",
+            startAngle: 60,
+            //innerRadius: 60,
+            indexLabelFontSize: 17,
+            indexLabel: "{label} - #percent%",
+            toolTipContent: "<b>{label}:</b> {y} (#percent%)",
+            dataPoints: [
+                { y: {{ positive }}, label: "Positive" },
+                { y: {{ negative }}, label: "Negative" },
+            ]
+        }]
+    });
+    chart.render();
+    
+    }
+    </script>
 <!-- Header -->
 <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
     <div class="container-fluid">
@@ -23,47 +55,69 @@
             <div class="card shadow">
                 <div class="card-header bg-transparent">
                     <div class="d-flex justify-content-between">
-                        <h3 class="mb-0" id="product-name-title">{{ prices.0.productid.name }}</h3>
-                        <h3 id="product-type">{{ prices.0.productid.brandid.name }}</h3>
+                        <h3 class="mb-0" id="product-name-title">Comments Analysis</h3>
+                        <h3 id="product-type"></h3>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <h3>{{product.0.name}} | {{ prices.0.productid.brandid.name }}</h3>
+                    <div class="row"> 
                         <div class="col-lg-6 item-photo">
-                            <img src="{{item.image}}" class="img-thumbnail" alt="">
+                            <img src="{{product.0.image}}" style="height: 550px;" alt="">
                         </div>
-                        <div class="col-lg-6">
-                            <h1 id="product-name">{{ item.name }}</h1>
-                            <h5 class="text-primary">Supllier: <a href="#" class="text-success" id="supplier-name">{{ suppliers.0.name }}</a></h5>
-
+                        <div class="col-md-6">
+                            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                            <script src="{% static '/assets/js/canvasjs.min.js' %} "></script>
+                        </div>
                         
-                        </div>
                     </div>
+                    <br>
                     <div class="row">
                      
                     <p class="padding-top" style="padding:15px;"></p>
-                        <h4>Comments</h4>
+                        <h3>Comments</h3>
                     </div>
                     <div class="row">
-                        
                         
                         <div class="col-md-12">
                             <div class="product-reviews">
                                 {% for rs in comments %}
                                     <div class="single-review">
-                                        <div class="review-heading">
-                                            <div><a href="#"><i class="fa fa-star"></i> {{ rs.authuser.username}}</a> </div>
+                                       
+                                            {% ifequal rs.label 1 %}
+                                        <div class="review-heading" style="background-color: #009900; color: seashell;">
+                                            <div><a href="#" style="color: seashell;"><i class="fa fa-star"></i> {{ rs.authuser.username}}</a> </div>
                                             <div><b>{{ rs.subject }}</b> </div>
-                                            <div><a href="#"><i class="fa fa-clock-o"></i> {{ rs.create_at}}</a></div>
+                                            <div><a href="#" style="color: seashell;"><i class="fa fa-clock-o"></i> {{ rs.create_at}}</a></div>
 
-                                            <div class="review-rating pull-right">
+                                            <div class="review-rating ">
                                                 <i class="fa fa-star{% if rs.rate < 1 %}-o empty{% endif %}"></i>
                                                 <i class="fa fa-star{% if rs.rate < 2 %}-o empty{% endif %}"></i>
                                                 <i class="fa fa-star{% if rs.rate < 3 %}-o empty{% endif %}"></i>
                                                 <i class="fa fa-star{% if rs.rate < 4 %}-o empty{% endif %}"></i>
                                                 <i class="fa fa-star{% if rs.rate < 5 %}-o empty{% endif %}"></i>
                                             </div>
+                                         
+                                            <div style="color: seashell;" class="pull-right"> Positive</div>
                                         </div>
+                                            {% else %}
+                                            <div class="review-heading" style="background-color: #FF0000; color: seashell;">
+                                                <div><a href="#" style="color: seashell;"><i class="fa fa-star"></i> {{ rs.authuser.username}}</a> </div>
+                                                <div><b>{{ rs.subject }}</b> </div>
+                                                <div><a href="#" style="color: seashell;"><i class="fa fa-clock-o"></i> {{ rs.create_at}}</a></div>
+    
+                                                <div class="review-rating ">
+                                                    <i class="fa fa-star{% if rs.rate < 1 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if rs.rate < 2 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if rs.rate < 3 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if rs.rate < 4 %}-o empty{% endif %}"></i>
+                                                    <i class="fa fa-star{% if rs.rate < 5 %}-o empty{% endif %}"></i>
+                                                </div>
+                                             
+                                                <div style="color: seashell;" class="pull-right"> Negative</div>
+                                            </div>
+                                            {% endifequal %}
+                                        
                                         <div class="review-body">
                                             <p>{{ rs.detail }}</p>
                                         </div>

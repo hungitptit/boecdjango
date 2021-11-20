@@ -21,6 +21,7 @@ from app.cart import Cart
 import pickle
 import os
 from core import settings
+import simplejson as json
 
 
 def remove_stopwords(line, stopWords):
@@ -268,7 +269,10 @@ def commentsAnalysis(request):
         mapData['product'] = product
         mapData['negative'] = negative
         mapData['positive'] = positive
-        mapData['satisfy'] = float(positive/(negative+positive)*100)
+        if(positive+negative!=0):
+            mapData['satisfy'] = float(positive/(negative+positive)*100)
+        else:
+             mapData['satisfy'] = 0
         data.append(mapData)
     data.sort(reverse=True, key=cmp)
                 
@@ -283,18 +287,36 @@ def staff(request):
 @login_required(login_url="/login/")
 def comments_analysis_detail_product(request,id):
     product = Product.objects.filter(id=id)
+    print(product)
     price_list = Productofsupplier.objects.select_related("productid").filter(productid=id)
     supplier_list = []
     comments = Comment.objects.filter(product_id=id)
+    dataPoints= []
     
+    negative = 0
+    positive = 0
+    for comment in comments:
+        mapData = {}
+        if (id==comment.product.id ):
+            if comment.label==0:
+                negative+=1
+            else:
+                positive+=1
+        
+    dataPoints.append(json.dumps({'y':positive, 'label':'Positive'}))
+    dataPoints.append(json.dumps({'y':negative, 'label':'Negative'}))
+    print (dataPoints)
     context = {'product': product,
                 'comments': comments,
+                'negative':negative,
+                'positive':positive,
+                'dataPoints':dataPoints,
                 'items': []
-               }
+               }              
     for price in price_list:
         supplier_list.append(Supplier.objects.all().get(id=price.supplierid.id))
     if price_list != None and supplier_list != None:
-        return render(request, 'comments-analysis-detail-product.html', {'prices': price_list, 'suppliers': supplier_list,'item':product[0],'comments': comments,'product': product})
+        return render(request, 'comments-analysis-detail-product.html', {'prices': price_list, 'suppliers': supplier_list,'item':product[0],'comments': comments,'product': product,'positive':positive,'negative':negative})
     else:
         return render(request, 'comments-analysis-detail-product.html', context)
   

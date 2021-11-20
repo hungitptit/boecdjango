@@ -312,12 +312,32 @@ class Shipment(models.Model):
     shipperunitid = models.ForeignKey('Shipperunit', models.DO_NOTHING, db_column='ShipperUnitID')  # Field name made lowercase.
     orderid = models.ForeignKey(Order, models.DO_NOTHING, db_column='OrderID')  # Field name made lowercase.
     shipmentdate = models.IntegerField(db_column='ShipmentDate', blank=True, null=True)  # Field name made lowercase.
-    fee = models.TextField(db_column='Fee')  # Field name made lowercase. This field type is a guess.
+    #fee = models.TextField(db_column='Fee')  # Field name made lowercase. This field type is a guess.
 
+    def ship(): pass
     class Meta:
           
         db_table = 'Shipment'
 
+
+class StandardShipment(Shipment):
+    name =  models.CharField(max_length=255)
+    fee = models.FloatField(default=0)
+    def ship(self):
+        self.name = "Standard Delivery"
+
+class ExpressShipment(Shipment):
+    name =  models.CharField(max_length=255)
+    fee = models.FloatField(default=0)
+    def ship(self):
+        self.name = "Express Delivery"
+
+class ShipmentFactory():
+    def getShipMethod(self,method):
+        if (method == "Standard"):
+            return StandardShipment()
+        elif (method == "Express"):
+            return ExpressShipment()
 
 class Shipperunit(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
